@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import logoImage from "../assets/logo.png";
 
 interface LoginPageProps {
@@ -13,6 +13,12 @@ function LoginPage({ onLogin }: LoginPageProps) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  
+  // Récupérer les paramètres de redirection depuis l'URL
+  const redirectPath = searchParams.get("redirect") || "/dashboard";
+  const ticketId = searchParams.get("ticket");
+  const action = searchParams.get("action");
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -71,9 +77,24 @@ function LoginPage({ onLogin }: LoginPageProps) {
       
       onLogin(data.access_token);
       
+      // Construire l'URL de redirection avec les paramètres préservés
+      let finalRedirect = redirectPath;
+      const redirectParams = new URLSearchParams();
+      
+      if (ticketId) {
+        redirectParams.set("ticket", ticketId);
+      }
+      if (action) {
+        redirectParams.set("action", action);
+      }
+      
+      if (redirectParams.toString()) {
+        finalRedirect = `${redirectPath}?${redirectParams.toString()}`;
+      }
+      
       // Petit délai pour laisser le temps au state de se mettre à jour
       setTimeout(() => {
-        navigate("/dashboard");
+        navigate(finalRedirect);
       }, 100);
     } catch (err: any) {
       const msg = err?.message ?? "Erreur de connexion";

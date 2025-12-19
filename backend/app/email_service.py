@@ -6,6 +6,7 @@ import os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from typing import List, Optional
+from urllib.parse import urlencode
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -186,11 +187,27 @@ Veuillez vous connecter à l'application pour analyser et assigner ce ticket.
 Cordialement,
 {self.sender_name}
 """
-        app_link = f"{self.app_base_url}/"
+        # Les liens pointent vers /login avec redirection pour forcer l'authentification
         if recipient_role == "DSI":
             # DSI reçoit 3 boutons : Assigner, Déléguer, et Ouvrir l'application
-            assign_link = f"{self.app_base_url}/dashboard/dsi?ticket={ticket_id}&action=assign"
-            delegate_link = f"{self.app_base_url}/dashboard/dsi?ticket={ticket_id}&action=delegate"
+            assign_params = urlencode({
+                "redirect": "/dashboard/dsi",
+                "ticket": ticket_id,
+                "action": "assign"
+            })
+            delegate_params = urlencode({
+                "redirect": "/dashboard/dsi",
+                "ticket": ticket_id,
+                "action": "delegate"
+            })
+            app_params = urlencode({
+                "redirect": "/dashboard/dsi"
+            })
+            
+            assign_link = f"{self.app_base_url}/login?{assign_params}"
+            delegate_link = f"{self.app_base_url}/login?{delegate_params}"
+            app_link = f"{self.app_base_url}/login?{app_params}"
+            
             actions_html = f"""
             <div style="margin: 20px 0; display:flex; gap:10px; flex-wrap:wrap;">
                 <a href="{assign_link}" style="background:#007bff;color:#fff;text-decoration:none;padding:10px 16px;border-radius:6px;display:inline-block">Assigner à un technicien</a>
@@ -204,7 +221,14 @@ Cordialement,
                 role_path = "/dashboard/dsi"
             else:
                 role_path = "/dashboard/secretary"
-            assign_link = f"{self.app_base_url}{role_path}?ticket={ticket_id}&action=assign"
+            
+            assign_params = urlencode({
+                "redirect": role_path,
+                "ticket": ticket_id,
+                "action": "assign"
+            })
+            assign_link = f"{self.app_base_url}/login?{assign_params}"
+            
             actions_html = f"""
             <div style="margin: 20px 0;">
                 <a href="{assign_link}" style="background:#007bff;color:#fff;text-decoration:none;padding:10px 16px;border-radius:6px;display:inline-block">Assigner à un technicien</a>
@@ -280,7 +304,12 @@ Cordialement,
 {self.sender_name}
 """
         
-        action_link = f"{self.app_base_url}/dashboard/technician?ticket={ticket_id}"
+        # Lien vers login avec redirection pour forcer l'authentification
+        redirect_params = urlencode({
+            "redirect": "/dashboard/technician",
+            "ticket": ticket_id
+        })
+        action_link = f"{self.app_base_url}/login?{redirect_params}"
         
         # Construire le HTML progressivement
         html_body = f"""
@@ -361,7 +390,12 @@ Cordialement,
 {self.sender_name}
 """
         
-        action_link = f"{self.app_base_url}/dashboard/user?ticket={ticket_id}"
+        # Lien vers login avec redirection pour forcer l'authentification
+        redirect_params = urlencode({
+            "redirect": "/dashboard/user",
+            "ticket": ticket_id
+        })
+        action_link = f"{self.app_base_url}/login?{redirect_params}"
         html_body = f"""
 <html>
 <body>
@@ -425,7 +459,12 @@ Cordialement,
 {self.sender_name}
 """
         
-        action_link = f"{self.app_base_url}/dashboard/user?ticket={ticket_id}"
+        # Lien vers login avec redirection pour forcer l'authentification
+        redirect_params = urlencode({
+            "redirect": "/dashboard/user",
+            "ticket": ticket_id
+        })
+        action_link = f"{self.app_base_url}/login?{redirect_params}"
         html_body = f"""
 <html>
 <body>

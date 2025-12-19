@@ -2,7 +2,7 @@ from typing import List, Optional
 from datetime import datetime
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException, status, Query, BackgroundTasks
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func
 
@@ -17,6 +17,7 @@ router = APIRouter()
 @router.post("/", response_model=schemas.TicketRead)
 def create_ticket(
     ticket_in: schemas.TicketCreate,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(require_role("Utilisateur")),
 ):
@@ -50,7 +51,8 @@ def create_ticket(
         models.Role.name.in_(["Secrétaire DSI", "Adjoint DSI", "DSI", "Admin"])
     ).all()
     
-    recipient_emails = []
+    # Préparer l'envoi d'emails en arrière-plan (asynchrone)
+    notified_users = []
     if target_roles:
         for role in target_roles:
             users = (
@@ -73,41 +75,23 @@ def create_ticket(
                 )
                 db.add(notification)
                 
-                # Ajouter l'email à la liste des destinataires (si email valide)
-                if user.email and user.email.strip():
-                    recipient_emails.append(user.email)
+                # Ajouter l'utilisateur à la liste pour l'envoi d'emails (éviter doublons par email)
+                if user.email and user.email.strip() and user.email not in [u.email for u in notified_users if u.email]:
+                    notified_users.append(user)
         
         db.commit()
         
-        # Envoyer un email de notification personnalisé par rôle
-        try:
-            # Rechercher les utilisateurs à notifier (éviter doublons)
-            notified_users = []
-            for role in target_roles:
-                users = (
-                    db.query(models.User)
-                    .options(joinedload(models.User.role))
-                    .filter(
-                        models.User.role_id == role.id,
-                        func.lower(models.User.status).in_(["actif", "active"])
-                    )
-                    .all()
-                )
-                for user in users:
-                    # Éviter doublons par email
-                    if user.email and user.email.strip() and user.email not in [u.email for u in notified_users]:
-                        notified_users.append(user)
-            for user in notified_users:
-                email_service.send_ticket_created_notification_with_actions(
-                    ticket_id=str(ticket.id),
-                    ticket_number=ticket.number,
-                    ticket_title=ticket.title,
-                    creator_name=current_user.full_name,
-                    recipient_email=user.email,
-                    recipient_role=user.role.name if user.role else ""
-                )
-        except Exception as e:
-            print(f"[EMAIL] Erreur envoi notifications par rôle: {e}")
+        # Ajouter les tâches d'envoi d'emails en arrière-plan
+        for user in notified_users:
+            background_tasks.add_task(
+                email_service.send_ticket_created_notification_with_actions,
+                ticket_id=str(ticket.id),
+                ticket_number=ticket.number,
+                ticket_title=ticket.title,
+                creator_name=current_user.full_name,
+                recipient_email=user.email,
+                recipient_role=user.role.name if user.role else ""
+            )
     
     # Créer une notification pour le créateur du ticket
     creator_notification = models.Notification(
@@ -120,18 +104,16 @@ def create_ticket(
     db.add(creator_notification)
     db.commit()
     
-    # Envoyer un email de confirmation au créateur
-    try:
-        if current_user.email and current_user.email.strip():
-            email_service.send_ticket_created_to_creator_notification(
-                ticket_id=str(ticket.id),
-                ticket_number=ticket.number,
-                ticket_title=ticket.title,
-                creator_email=current_user.email,
-                creator_name=current_user.full_name
-            )
-    except Exception as e:
-        print(f"[EMAIL] Erreur envoi email créateur: {e}")
+    # Envoyer un email de confirmation au créateur en arrière-plan (asynchrone)
+    if current_user.email and current_user.email.strip():
+        background_tasks.add_task(
+            email_service.send_ticket_created_to_creator_notification,
+            ticket_id=str(ticket.id),
+            ticket_number=ticket.number,
+            ticket_title=ticket.title,
+            creator_email=current_user.email,
+            creator_name=current_user.full_name
+        )
     
     # Charger les relations pour la réponse
     ticket = (
