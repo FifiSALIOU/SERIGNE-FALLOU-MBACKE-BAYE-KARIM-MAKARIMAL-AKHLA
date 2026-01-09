@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import type { FormEvent } from "react";
-import { Clock, CheckCircle, LayoutDashboard, PlusCircle, Ticket, ChevronLeft, ChevronRight, Bell, Wrench, Monitor } from "lucide-react";
+import { Clock, CheckCircle, LayoutDashboard, PlusCircle, Ticket, ChevronLeft, ChevronRight, Bell, Wrench, Monitor, Search } from "lucide-react";
 import helpdeskLogo from "../assets/helpdesk-logo.png";
 
 interface UserDashboardProps {
@@ -794,6 +794,7 @@ function UserDashboard({ token: tokenProp }: UserDashboardProps) {
   const [selectedCharacteristic, setSelectedCharacteristic] = useState<string>("");
   const [dashboardSearch, setDashboardSearch] = useState<string>("");
   const [dashboardStatusFilter, setDashboardStatusFilter] = useState<string>("");
+  const [dashboardCategoryFilter, setDashboardCategoryFilter] = useState<string>("");
   const [dashboardPriorityFilter, setDashboardPriorityFilter] = useState<string>("");
   const [selectedFilterValue, setSelectedFilterValue] = useState<string>("");
  
@@ -1295,7 +1296,7 @@ function UserDashboard({ token: tokenProp }: UserDashboardProps) {
               color: "#111827",
               fontFamily: "system-ui, -apple-system, sans-serif"
             }}>
-              Tableau de bord
+              {activeSection === "tickets" ? "Tickets" : "Tableau de bord"}
             </div>
             <div style={{ 
               fontSize: "13px", 
@@ -1303,7 +1304,7 @@ function UserDashboard({ token: tokenProp }: UserDashboardProps) {
               color: "#6b7280",
               fontFamily: "system-ui, -apple-system, sans-serif"
             }}>
-              Vue d'ensemble de votre activité
+              {activeSection === "tickets" ? "Gérez tous vos tickets" : "Vue d'ensemble de votre activité"}
             </div>
           </div>
 
@@ -1632,7 +1633,7 @@ function UserDashboard({ token: tokenProp }: UserDashboardProps) {
                           e.currentTarget.style.backgroundColor = "#dc3545";
                         }}
                       >
-                        Rejeter
+                        Relancer
                       </button>
                     </>
                   )}
@@ -1656,7 +1657,7 @@ function UserDashboard({ token: tokenProp }: UserDashboardProps) {
             {/* Message d'accueil */}
             <div style={{ marginTop: "40px", marginBottom: "30px" }}>
               <div style={{ fontSize: "22px", fontWeight: "700", color: "#111827", marginBottom: "8px" }}>
-                Bonjour {userInfo?.full_name ? userInfo.full_name.split(' ')[0] : 'Jean'} 👋
+                Bonjour, {userInfo?.full_name ? userInfo.full_name.split(' ')[0] : 'Jean'} 👋
               </div>
               <div style={{ fontSize: "16px", color: "#4b5563", lineHeight: "1.5" }}>
                 Comment pouvons-nous vous aider aujourd'hui ? Notre équipe technique est là pour vous.
@@ -2231,27 +2232,53 @@ function UserDashboard({ token: tokenProp }: UserDashboardProps) {
         {/* Section Header with Create Button */}
         {(activeSection === "tickets" || activeSection === "dashboard") && (
           <div ref={ticketsListRef}>
+            {activeSection === "dashboard" && (
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+                <h3 style={{ fontSize: "22px", fontWeight: "700", color: "#333" }}>
+                  Mes Tickets Récents
+                </h3>
+              </div>
+            )}
             {(activeSection === "dashboard" || activeSection === "tickets") && (
               <div style={{ 
                 display: "flex", 
                 alignItems: "center", 
                 gap: "12px", 
-                marginBottom: "16px"
+                marginTop: "20px",
+                marginBottom: "20px"
               }}>
-                <input
-                  type="text"
-                  placeholder="Rechercher par ticket, titre ou description..."
-                  value={dashboardSearch}
-                  onChange={(e) => setDashboardSearch(e.target.value)}
-                  style={{
-                    flex: 1,
-                    padding: "10px 12px",
-                    border: "1px solid #d1d5db",
-                    borderRadius: "8px",
-                    fontSize: "14px",
-                    background: "white"
-                  }}
-                />
+                <div style={{ 
+                  flex: 1, 
+                  position: "relative", 
+                  display: "flex", 
+                  alignItems: "center" 
+                }}>
+                  <Search 
+                    size={16} 
+                    style={{ 
+                      position: "absolute", 
+                      left: "16px", 
+                      color: "#6b7280",
+                      pointerEvents: "none"
+                    }} 
+                  />
+                  <input
+                    type="text"
+                    placeholder="Rechercher par ID, titre..."
+                    value={dashboardSearch}
+                    onChange={(e) => setDashboardSearch(e.target.value)}
+                    style={{
+                      width: "100%",
+                      padding: "8px 40px",
+                      border: "1px solid #e5e7eb",
+                      borderRadius: "8px",
+                      fontSize: "14px",
+                      background: "white",
+                      outline: "none",
+                      color: "#1f2937"
+                    }}
+                  />
+                </div>
                 <select
                   value={dashboardStatusFilter}
                   onChange={(e) => setDashboardStatusFilter(e.target.value)}
@@ -2271,6 +2298,22 @@ function UserDashboard({ token: tokenProp }: UserDashboardProps) {
                   <option value="resolu">Résolu</option>
                   <option value="rejete">Rejeté</option>
                   <option value="cloture">Clôturé</option>
+                </select>
+                <select
+                  value={dashboardCategoryFilter}
+                  onChange={(e) => setDashboardCategoryFilter(e.target.value)}
+                  style={{ 
+                    padding: "10px 12px", 
+                    border: "1px solid #d1d5db", 
+                    borderRadius: "8px",
+                    fontSize: "14px",
+                    background: "white",
+                    minWidth: "140px"
+                  }}
+                >
+                  <option value="">Tous types</option>
+                  <option value="materiel">Matériel</option>
+                  <option value="applicatif">Applicatif</option>
                 </select>
                 <select
                   value={dashboardPriorityFilter}
@@ -2319,12 +2362,21 @@ function UserDashboard({ token: tokenProp }: UserDashboardProps) {
                   ? tickets.filter((t) => {
                     const search = dashboardSearch.trim().toLowerCase();
                     const matchesSearch = !search || 
+                      t.id.toLowerCase().includes(search) ||
                       t.number.toString().includes(search) ||
                       t.title.toLowerCase().includes(search) ||
                       (t.description || "").toLowerCase().includes(search);
                     const matchesStatus = !dashboardStatusFilter || t.status === dashboardStatusFilter;
+                    const matchesCategory = !dashboardCategoryFilter || (() => {
+                      const category = (t.category || "").toLowerCase();
+                      const isApplicatif = category.includes("logiciel") || 
+                                          category.includes("applicatif") ||
+                                          category.includes("application");
+                      const categoryType = isApplicatif ? "applicatif" : "materiel";
+                      return categoryType === dashboardCategoryFilter.toLowerCase();
+                    })();
                     const matchesPriority = !dashboardPriorityFilter || t.priority === dashboardPriorityFilter;
-                    return matchesSearch && matchesStatus && matchesPriority;
+                    return matchesSearch && matchesStatus && matchesCategory && matchesPriority;
                   })
                   : tickets)
                   .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
@@ -2729,36 +2781,9 @@ function UserDashboard({ token: tokenProp }: UserDashboardProps) {
                             )}
                           </div>
 
-                          {/* Actions spéciales (Valider/Relancer ou Avis donné) */}
+                          {/* Actions spéciales - Avis donné seulement */}
                           <div>
-                        {t.status === "resolu" ? (
-                          <div style={{ display: "flex", gap: "4px" }}>
-                            <button
-                              onClick={(e) => { 
-                                e.stopPropagation(); 
-                                setValidationTicket(t.id);
-                                setShowRejectionForm(false);
-                                setRejectionReason("");
-                              }}
-                              disabled={loading}
-                              style={{ fontSize: "11px", padding: "4px 8px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}
-                            >
-                              Valider
-                            </button>
-                            <button
-                              onClick={(e) => { 
-                                e.stopPropagation(); 
-                                setValidationTicket(t.id);
-                                setShowRejectionForm(true);
-                                setRejectionReason("");
-                              }}
-                              disabled={loading}
-                              style={{ fontSize: "11px", padding: "4px 8px", backgroundColor: "#dc3545", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}
-                            >
-                              Relancer
-                            </button>
-                          </div>
-                        ) : t.status === "cloture" && t.feedback_score ? (
+                        {t.status === "cloture" && t.feedback_score ? (
                           <span style={{ color: "#28a745", fontSize: "12px" }}>
                             ✓ Avis donné ({t.feedback_score}/5)
                           </span>
