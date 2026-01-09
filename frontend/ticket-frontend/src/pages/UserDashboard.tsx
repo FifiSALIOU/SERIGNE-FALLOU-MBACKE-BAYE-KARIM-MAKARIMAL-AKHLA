@@ -2264,7 +2264,7 @@ function UserDashboard({ token: tokenProp }: UserDashboardProps) {
                   />
                   <input
                     type="text"
-                    placeholder="Rechercher par ID, titre..."
+                    placeholder="Rechercher par ID, titre, description..."
                     value={dashboardSearch}
                     onChange={(e) => setDashboardSearch(e.target.value)}
                     style={{

@@ -1,6 +1,5 @@
 from typing import List, Optional
 from datetime import datetime
-from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query, BackgroundTasks
 from sqlalchemy.orm import Session, joinedload
@@ -189,7 +188,7 @@ def list_assigned_tickets(
 
 @router.get("/{ticket_id}", response_model=schemas.TicketRead)
 def get_ticket(
-    ticket_id: UUID,
+    ticket_id: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
@@ -223,7 +222,7 @@ def get_ticket(
 
 @router.put("/{ticket_id}", response_model=schemas.TicketRead)
 def edit_ticket(
-    ticket_id: UUID,
+    ticket_id: int,
     ticket_in: schemas.TicketEdit,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
@@ -283,7 +282,7 @@ def edit_ticket(
 
 @router.delete("/{ticket_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_ticket(
-    ticket_id: UUID,
+    ticket_id: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
@@ -322,7 +321,7 @@ def delete_ticket(
 
 @router.put("/{ticket_id}/assign", response_model=schemas.TicketRead)
 def assign_ticket(
-    ticket_id: UUID,
+    ticket_id: int,
     assign_data: schemas.TicketAssign,
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
@@ -433,7 +432,7 @@ def assign_ticket(
 
 @router.put("/{ticket_id}/reassign", response_model=schemas.TicketRead)
 def reassign_ticket(
-    ticket_id: UUID,
+    ticket_id: int,
     assign_data: schemas.TicketAssign,
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
@@ -571,7 +570,7 @@ def reassign_ticket(
 
 @router.put("/{ticket_id}/escalate", response_model=schemas.TicketRead)
 def escalate_ticket(
-    ticket_id: UUID,
+    ticket_id: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(
         require_role("Adjoint DSI", "DSI", "Admin")
@@ -674,7 +673,7 @@ def escalate_ticket(
 
 @router.put("/{ticket_id}/status", response_model=schemas.TicketRead)
 def update_ticket_status(
-    ticket_id: UUID,
+    ticket_id: int,
     status_update: schemas.TicketUpdate,
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
@@ -849,7 +848,7 @@ def update_ticket_status(
 
 @router.post("/{ticket_id}/comments", response_model=schemas.CommentRead)
 def add_comment(
-    ticket_id: UUID,
+    ticket_id: int,
     comment_in: schemas.CommentCreate,
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
@@ -905,7 +904,7 @@ def add_comment(
 
 @router.get("/{ticket_id}/comments", response_model=List[schemas.CommentRead])
 def get_ticket_comments(
-    ticket_id: UUID,
+    ticket_id: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
@@ -927,7 +926,7 @@ def get_ticket_comments(
 
 @router.put("/{ticket_id}/validate", response_model=schemas.TicketRead)
 def validate_ticket_resolution(
-    ticket_id: UUID,
+    ticket_id: int,
     validation: schemas.TicketValidation,
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
@@ -1081,7 +1080,7 @@ def validate_ticket_resolution(
 
 @router.put("/{ticket_id}/delegate-adjoint", response_model=schemas.TicketRead)
 def delegate_to_adjoint(
-    ticket_id: UUID,
+    ticket_id: int,
     delegate_data: schemas.TicketDelegate,
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
@@ -1151,7 +1150,7 @@ def delegate_to_adjoint(
 
 @router.put("/{ticket_id}/accept-assignment", response_model=schemas.TicketRead)
 def accept_assignment(
-    ticket_id: UUID,
+    ticket_id: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
@@ -1202,7 +1201,7 @@ def accept_assignment(
 
 @router.put("/{ticket_id}/reject-assignment", response_model=schemas.TicketRead)
 def reject_assignment(
-    ticket_id: UUID,
+    ticket_id: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
     reason: Optional[str] = Query(None),
@@ -1270,7 +1269,7 @@ def reject_assignment(
 
 @router.put("/{ticket_id}/feedback", response_model=schemas.TicketRead)
 def submit_ticket_feedback(
-    ticket_id: UUID,
+    ticket_id: int,
     feedback: schemas.TicketFeedback,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
@@ -1325,7 +1324,7 @@ def submit_ticket_feedback(
 
 @router.put("/{ticket_id}/reopen-by-user", response_model=schemas.TicketRead)
 def reopen_ticket_by_user(
-    ticket_id: UUID,
+    ticket_id: int,
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
@@ -1452,7 +1451,7 @@ def reopen_ticket_by_user(
 
 @router.put("/{ticket_id}/reopen", response_model=schemas.TicketRead)
 def reopen_ticket(
-    ticket_id: UUID,
+    ticket_id: int,
     assign_data: schemas.TicketAssign,
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
@@ -1540,7 +1539,7 @@ def reopen_ticket(
 
 @router.get("/{ticket_id}/history", response_model=List[schemas.TicketHistoryRead])
 def get_ticket_history(
-    ticket_id: UUID,
+    ticket_id: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):

@@ -1,6 +1,5 @@
 from datetime import datetime
 from typing import List, Optional
-from uuid import UUID
 
 from pydantic import BaseModel
 
@@ -13,7 +12,7 @@ class RoleBase(BaseModel):
 
 
 class RoleRead(RoleBase):
-    id: UUID
+    id: int
 
     class Config:
         from_attributes = True
@@ -32,7 +31,7 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     username: str
     password: str
-    role_id: UUID
+    role_id: int
 
 
 class UserUpdate(BaseModel):
@@ -40,7 +39,7 @@ class UserUpdate(BaseModel):
     email: Optional[str] = None
     agency: Optional[str] = None
     phone: Optional[str] = None
-    role_id: Optional[UUID] = None
+    role_id: Optional[int] = None
     actif: Optional[bool] = None
     specialization: Optional[str] = None
     max_tickets_capacity: Optional[int] = None
@@ -48,7 +47,7 @@ class UserUpdate(BaseModel):
 
 
 class UserRead(UserBase):
-    id: UUID
+    id: int
     role: RoleRead
     actif: bool
 
@@ -83,31 +82,31 @@ class TicketEdit(BaseModel):
 class TicketUpdate(BaseModel):
     status: Optional[TicketStatus] = None
     priority: Optional[TicketPriority] = None
-    technician_id: Optional[UUID] = None
+    technician_id: Optional[int] = None
     resolution_summary: Optional[str] = None  # Résumé de la résolution
 
 
 class TicketAssign(BaseModel):
-    technician_id: UUID
+    technician_id: int
     reason: Optional[str] = None
     notes: Optional[str] = None  # Notes/instructions pour le technicien
 
 class TicketDelegate(BaseModel):
-    adjoint_id: UUID
+    adjoint_id: int
     reason: Optional[str] = None
     notes: Optional[str] = None
 
 
 class TicketRead(TicketBase):
-    id: UUID
+    id: int
     number: int
     status: TicketStatus
     created_at: datetime
-    creator_id: UUID
+    creator_id: int
     creator: Optional[UserRead] = None  # Informations complètes du créateur
-    technician_id: Optional[UUID] = None
+    technician_id: Optional[int] = None
     technician: Optional[UserRead] = None  # Informations complètes du technicien
-    secretary_id: Optional[UUID] = None
+    secretary_id: Optional[int] = None
     user_agency: Optional[str] = None  # Agence de l'utilisateur créateur
     assigned_at: Optional[datetime] = None
     resolved_at: Optional[datetime] = None
@@ -119,7 +118,7 @@ class TicketRead(TicketBase):
 
 
 class TicketTypeConfig(BaseModel):
-    id: UUID
+    id: int
     code: str
     label: str
     is_active: bool
@@ -129,7 +128,7 @@ class TicketTypeConfig(BaseModel):
 
 
 class TicketCategoryConfig(BaseModel):
-    id: UUID
+    id: int
     name: str
     description: Optional[str] = None
     type_code: str  # Récupéré depuis ticket_type.code via la relation dans l'endpoint API
@@ -142,13 +141,13 @@ class TicketCategoryConfig(BaseModel):
 class CommentCreate(BaseModel):
     content: str
     type: CommentType = CommentType.TECHNIQUE
-    ticket_id: UUID
+    ticket_id: int
 
 
 class CommentRead(BaseModel):
-    id: UUID
-    ticket_id: UUID
-    user_id: UUID
+    id: int
+    ticket_id: int
+    user_id: int
     content: str
     type: CommentType
     created_at: datetime
@@ -163,7 +162,7 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    user_id: Optional[UUID] = None
+    user_id: Optional[int] = None
 
 
 class TicketValidation(BaseModel):
@@ -180,18 +179,18 @@ class TicketFeedback(BaseModel):
 
 class NotificationCreate(BaseModel):
     """Schéma pour créer une notification"""
-    user_id: UUID
+    user_id: int
     type: NotificationType
-    ticket_id: Optional[UUID] = None
+    ticket_id: Optional[int] = None
     message: str
 
 
 class NotificationRead(BaseModel):
     """Schéma pour lire une notification"""
-    id: UUID
-    user_id: UUID
+    id: int
+    user_id: int
     type: NotificationType
-    ticket_id: Optional[UUID] = None
+    ticket_id: Optional[int] = None
     message: str
     read: bool
     created_at: datetime
@@ -203,11 +202,11 @@ class NotificationRead(BaseModel):
 
 class TicketHistoryRead(BaseModel):
     """Schéma pour lire l'historique d'un ticket"""
-    id: UUID
-    ticket_id: UUID
+    id: int
+    ticket_id: int
     old_status: Optional[str] = None
     new_status: str
-    user_id: UUID
+    user_id: int
     reason: Optional[str] = None
     changed_at: datetime
     user: Optional[UserRead] = None

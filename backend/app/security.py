@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta, timezone
 from typing import Optional
-from uuid import UUID
 import os
 
 from fastapi import Depends, HTTPException, status
@@ -87,7 +86,7 @@ async def get_current_user(
         user_id: str = payload.get("sub")
         if user_id is None:
             raise credentials_exception
-        token_data = schemas.TokenData(user_id=UUID(user_id))
+        token_data = schemas.TokenData(user_id=int(user_id))
     except (JWTError, ValueError):
         raise credentials_exception
 

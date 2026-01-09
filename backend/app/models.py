@@ -1,4 +1,3 @@
-import uuid
 from datetime import datetime
 
 from sqlalchemy import (
@@ -11,7 +10,7 @@ from sqlalchemy import (
     String,
     Text,
 )
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -20,7 +19,7 @@ from .database import Base
 class Role(Base):
     __tablename__ = "roles"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), unique=True, nullable=False)
     description = Column(Text, nullable=True)
     permissions = Column(JSONB, nullable=True)
@@ -32,7 +31,7 @@ class Role(Base):
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     full_name = Column(String(150), nullable=False)
     email = Column(String(255), unique=True, nullable=False)
     agency = Column(String(100), nullable=True)  # Agence au lieu de département
@@ -48,7 +47,7 @@ class User(Base):
     username = Column(String(100), unique=True, nullable=False)
     password_hash = Column(String(255), nullable=False)
 
-    role_id = Column(UUID(as_uuid=True), ForeignKey("roles.id"), nullable=False)
+    role_id = Column(Integer, ForeignKey("roles.id"), nullable=False)
     role = relationship("Role", back_populates="users")
 
     created_tickets = relationship(
@@ -86,7 +85,7 @@ class TicketStatus(str, PyEnum):
 class Ticket(Base):
     __tablename__ = "tickets"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     number = Column(Integer, autoincrement=True, unique=True, nullable=False)
     title = Column(String(255), nullable=False)
     description = Column(Text, nullable=False)
@@ -95,9 +94,9 @@ class Ticket(Base):
     status = Column(Enum(TicketStatus), nullable=False, default=TicketStatus.EN_ATTENTE_ANALYSE)
     category = Column(String(100), nullable=True)  # Catégorie du ticket (ex: Réseau, Logiciel, Matériel, etc.)
 
-    creator_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
-    technician_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
-    secretary_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    creator_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    technician_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    secretary_id = Column(Integer, ForeignKey("users.id"), nullable=True)
 
     user_agency = Column(String(100), nullable=True)  # Agence de l'utilisateur créateur
 
@@ -127,9 +126,9 @@ class CommentType(str, PyEnum):
 class Comment(Base):
     __tablename__ = "comments"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    ticket_id = Column(UUID(as_uuid=True), ForeignKey("tickets.id"), nullable=False)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    ticket_id = Column(Integer, ForeignKey("tickets.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     content = Column(Text, nullable=False)
     type = Column(Enum(CommentType), nullable=False, default=CommentType.TECHNIQUE)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -143,11 +142,11 @@ class Comment(Base):
 class TicketHistory(Base):
     __tablename__ = "ticket_history"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    ticket_id = Column(UUID(as_uuid=True), ForeignKey("tickets.id"), nullable=False)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    ticket_id = Column(Integer, ForeignKey("tickets.id"), nullable=False)
     old_status = Column(Enum(TicketStatus), nullable=True)
     new_status = Column(Enum(TicketStatus), nullable=False)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     reason = Column(Text, nullable=True)
     changed_at = Column(DateTime, default=datetime.utcnow)
 
@@ -162,7 +161,7 @@ class TicketTypeModel(Base):
     """
     __tablename__ = "ticket_types"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     code = Column(String(50), unique=True, nullable=False)  # ex: "materiel", "applicatif"
     label = Column(String(100), nullable=False)  # ex: "Matériel", "Applicatif"
     is_active = Column(Boolean, default=True)
@@ -176,10 +175,10 @@ class TicketCategory(Base):
     """
     __tablename__ = "ticket_categories"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(100), unique=True, nullable=False)
     description = Column(Text, nullable=True)
-    ticket_type_id = Column(UUID(as_uuid=True), ForeignKey("ticket_types.id"), nullable=False)
+    ticket_type_id = Column(Integer, ForeignKey("ticket_types.id"), nullable=False)
     is_active = Column(Boolean, default=True)
     
     # Relation vers TicketTypeModel
@@ -232,10 +231,10 @@ class NotificationType(str, PyEnum):
 class Notification(Base):
     __tablename__ = "notifications"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     type = Column(Enum(NotificationType), nullable=False)
-    ticket_id = Column(UUID(as_uuid=True), ForeignKey("tickets.id"), nullable=True)
+    ticket_id = Column(Integer, ForeignKey("tickets.id"), nullable=True)
     message = Column(Text, nullable=False)
     read = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -245,10 +244,10 @@ class Notification(Base):
 class Report(Base):
     __tablename__ = "reports"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String(255), nullable=False)
     report_type = Column(String(50), nullable=False)
-    creator_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    creator_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     data = Column(JSONB, nullable=False)
     generated_at = Column(DateTime, default=datetime.utcnow)
     period_start = Column(DateTime, nullable=True)

@@ -1,5 +1,4 @@
 from typing import List
-from uuid import UUID
 import secrets
 import string
 from datetime import datetime
@@ -91,7 +90,7 @@ def list_technicians(
 
 @router.get("/technicians/{technician_id}/stats")
 def get_technician_stats(
-    technician_id: UUID,
+    technician_id: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(
         require_role("Secrétaire DSI", "Adjoint DSI", "DSI", "Admin")
@@ -343,7 +342,7 @@ def list_all_users(
 
 @router.get("/{user_id}", response_model=schemas.UserRead)
 def get_user(
-    user_id: UUID,
+    user_id: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(require_role("DSI", "Admin")),
 ):
@@ -359,7 +358,7 @@ def get_user(
 
 @router.put("/{user_id}", response_model=schemas.UserRead)
 def update_user(
-    user_id: UUID,
+    user_id: int,
     user_update: schemas.UserUpdate,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(require_role("DSI", "Admin")),
@@ -422,7 +421,7 @@ def update_user(
 
 @router.delete("/{user_id}")
 def delete_user(
-    user_id: UUID,
+    user_id: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(require_role("DSI", "Admin")),
 ):
@@ -449,17 +448,17 @@ def delete_user(
         # Au lieu de supprimer, désactiver l'utilisateur
         user.actif = False
         db.commit()
-        return {"message": "User deactivated (has associated tickets)", "user_id": str(user_id)}
+        return {"message": "User deactivated (has associated tickets)", "user_id": user_id}
     
     db.delete(user)
     db.commit()
     
-    return {"message": "User deleted successfully", "user_id": str(user_id)}
+    return {"message": "User deleted successfully", "user_id": user_id}
 
 
 @router.post("/{user_id}/reset-password")
 def reset_user_password(
-    user_id: UUID,
+    user_id: int,
     password_reset: schemas.PasswordReset,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(require_role("DSI", "Admin")),
@@ -486,7 +485,7 @@ def reset_user_password(
     
     return {
         "message": "Password reset successfully",
-        "user_id": str(user_id),
+        "user_id": user_id,
         "new_password": new_password  # Retourner le mot de passe pour l'affichage (à ne faire qu'en développement)
     }
 

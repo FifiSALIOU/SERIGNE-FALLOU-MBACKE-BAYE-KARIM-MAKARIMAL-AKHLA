@@ -1,6 +1,5 @@
 from typing import List
 from datetime import datetime
-from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
@@ -58,7 +57,7 @@ def get_unread_count(
 
 @router.put("/{notification_id}/read", response_model=schemas.NotificationRead)
 def mark_notification_as_read(
-    notification_id: UUID,
+    notification_id: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
