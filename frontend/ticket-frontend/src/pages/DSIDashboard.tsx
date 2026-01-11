@@ -5469,7 +5469,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(6, minmax(130px, 1fr))",
+          gridTemplateColumns: "repeat(6, minmax(150px, 1fr))",
           gap: "10px",
           margin: "20px 0",
         }}
@@ -5479,7 +5479,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
           style={{
             background: "white",
             borderRadius: "12px",
-            padding: "10px 12px",
+            padding: "14px 16px",
             boxShadow: "0 6px 18px rgba(15,23,42,0.08)",
             position: "relative",
             overflow: "hidden",
@@ -5508,25 +5508,19 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
           />
           <div
             style={{
+              position: "absolute",
+              right: "14px",
+              top: "14px",
+              width: "40px",
+              height: "40px",
+              borderRadius: "10px",
+              background: "#fff4e6",
               display: "flex",
               alignItems: "center",
-              gap: "8px",
-              marginBottom: "8px",
+              justifyContent: "center",
             }}
           >
-            <div
-              style={{
-                width: "36px",
-                height: "36px",
-                borderRadius: "10px",
-                background: "#fff4e6",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Clock3 size={18} color="#ff8a3c" />
-            </div>
+            <Clock3 size={20} color="#ff8a3c" />
           </div>
           <div
             style={{
@@ -5551,7 +5545,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
           style={{
             background: "white",
             borderRadius: "12px",
-            padding: "10px 12px",
+            padding: "14px 16px",
             boxShadow: "0 6px 18px rgba(15,23,42,0.08)",
             position: "relative",
             overflow: "hidden",
@@ -5580,17 +5574,19 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
           />
           <div
             style={{
-              width: "36px",
-              height: "36px",
+              position: "absolute",
+              right: "14px",
+              top: "14px",
+              width: "40px",
+              height: "40px",
               borderRadius: "10px",
               background: "#e6fff3",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginBottom: "8px",
             }}
           >
-            <UserCheck size={18} color="#16a34a" />
+            <UserCheck size={20} color="#16a34a" />
           </div>
           <div
             style={{
@@ -5615,7 +5611,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
           style={{
             background: "white",
             borderRadius: "12px",
-            padding: "10px 12px",
+            padding: "14px 16px",
             boxShadow: "0 6px 18px rgba(15,23,42,0.08)",
             position: "relative",
             overflow: "hidden",
@@ -5644,17 +5640,19 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
           />
           <div
             style={{
-              width: "36px",
-              height: "36px",
+              position: "absolute",
+              right: "14px",
+              top: "14px",
+              width: "40px",
+              height: "40px",
               borderRadius: "10px",
               background: "#f4e9ff",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginBottom: "8px",
             }}
           >
-            <Clock3 size={18} color="#8b5cf6" />
+            <Clock3 size={20} color="#8b5cf6" />
           </div>
           <div
             style={{
@@ -5680,7 +5678,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
           style={{
             background: "white",
             borderRadius: "12px",
-            padding: "10px 12px",
+            padding: "14px 16px",
             boxShadow: "0 6px 18px rgba(15,23,42,0.08)",
             position: "relative",
             overflow: "hidden",
@@ -5709,17 +5707,19 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
           />
           <div
             style={{
-              width: "36px",
-              height: "36px",
+              position: "absolute",
+              right: "14px",
+              top: "14px",
+              width: "40px",
+              height: "40px",
               borderRadius: "10px",
               background: "#fff8db",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginBottom: "8px",
             }}
           >
-            <Star size={18} color="#eab308" />
+            <Star size={20} color="#eab308" />
           </div>
           <div
             style={{
@@ -5745,7 +5745,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
           style={{
             background: "white",
             borderRadius: "12px",
-            padding: "10px 12px",
+            padding: "14px 16px",
             boxShadow: "0 6px 18px rgba(15,23,42,0.08)",
             position: "relative",
             overflow: "hidden",
@@ -5774,17 +5774,19 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
           />
           <div
             style={{
-              width: "36px",
-              height: "36px",
+              position: "absolute",
+              right: "14px",
+              top: "14px",
+              width: "40px",
+              height: "40px",
               borderRadius: "10px",
               background: "#e0f7ff",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginBottom: "8px",
             }}
           >
-            <Clock3 size={18} color="#0284c7" />
+            <Clock3 size={20} color="#0284c7" />
           </div>
           <div
             style={{
@@ -5809,7 +5811,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
           style={{
             background: "white",
             borderRadius: "12px",
-            padding: "10px 12px",
+            padding: "14px 16px",
             boxShadow: "0 6px 18px rgba(15,23,42,0.08)",
             position: "relative",
             overflow: "hidden",
@@ -5838,17 +5840,19 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
           />
           <div
             style={{
-              width: "36px",
-              height: "36px",
+              position: "absolute",
+              right: "14px",
+              top: "14px",
+              width: "40px",
+              height: "40px",
               borderRadius: "10px",
               background: "#dcfce7",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginBottom: "8px",
             }}
           >
-            <UserCheck size={18} color="#16a34a" />
+            <UserCheck size={20} color="#16a34a" />
           </div>
           <div
             style={{
