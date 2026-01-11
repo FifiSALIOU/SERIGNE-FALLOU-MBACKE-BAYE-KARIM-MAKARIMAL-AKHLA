@@ -3,7 +3,7 @@ from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query, BackgroundTasks
 from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import func
+from sqlalchemy import func, or_, cast, String
 
 from .. import models, schemas
 from ..database import get_db
@@ -149,40 +149,60 @@ def list_my_tickets(
 
 @router.get("/", response_model=List[schemas.TicketRead])
 def list_all_tickets(
+    search: Optional[str] = Query(None, description="Rechercher par ID, Titre ou Description"),
     db: Session = Depends(get_db),
     current_user: models.User = Depends(
         require_role("Secrétaire DSI", "Adjoint DSI", "DSI", "Admin")
     ),
 ):
     """Liste de tous les tickets (pour secrétaire/adjoint/DSI/admin)"""
-    tickets = (
+    query = (
         db.query(models.Ticket)
         .options(
             joinedload(models.Ticket.creator),
             joinedload(models.Ticket.technician)
         )
-        .order_by(models.Ticket.created_at.desc())
-        .all()
     )
+    
+    # Ajouter le filtre de recherche si fourni
+    if search:
+        search_filter = or_(
+            cast(models.Ticket.id, String).ilike(f"%{search}%"),
+            models.Ticket.title.ilike(f"%{search}%"),
+            models.Ticket.description.ilike(f"%{search}%")
+        )
+        query = query.filter(search_filter)
+    
+    tickets = query.order_by(models.Ticket.created_at.desc()).all()
     return tickets
 
 
 @router.get("/assigned", response_model=List[schemas.TicketRead])
 def list_assigned_tickets(
+    search: Optional[str] = Query(None, description="Rechercher par ID, Titre ou Description"),
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
     """Liste des tickets assignés au technicien connecté"""
-    tickets = (
+    query = (
         db.query(models.Ticket)
         .options(
             joinedload(models.Ticket.creator),
             joinedload(models.Ticket.technician)
         )
         .filter(models.Ticket.technician_id == current_user.id)
-        .order_by(models.Ticket.created_at.desc())
-        .all()
     )
+    
+    # Ajouter le filtre de recherche si fourni
+    if search:
+        search_filter = or_(
+            cast(models.Ticket.id, String).ilike(f"%{search}%"),
+            models.Ticket.title.ilike(f"%{search}%"),
+            models.Ticket.description.ilike(f"%{search}%")
+        )
+        query = query.filter(search_filter)
+    
+    tickets = query.order_by(models.Ticket.created_at.desc()).all()
     return tickets
 
 

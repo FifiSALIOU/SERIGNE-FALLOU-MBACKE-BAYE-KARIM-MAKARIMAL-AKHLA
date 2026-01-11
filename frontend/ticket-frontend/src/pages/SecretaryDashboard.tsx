@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Clock3, Users, CheckCircle2, ChevronRight, ChevronLeft, ChevronDown, LayoutDashboard, Bell } from "lucide-react";
+import { Clock3, Users, CheckCircle2, ChevronRight, ChevronLeft, ChevronDown, LayoutDashboard, Bell, Search } from "lucide-react";
 import helpdeskLogo from "../assets/helpdesk-logo.png";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -141,6 +141,7 @@ function SecretaryDashboard({ token }: SecretaryDashboardProps) {
   const [recentReports, setRecentReports] = useState<any[]>([]);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [openActionsMenuFor, setOpenActionsMenuFor] = useState<string | null>(null);
+  const [ticketSearchQuery, setTicketSearchQuery] = useState<string>("");
 
   // Fonction pour obtenir le libellé d'une priorité
   function getPriorityLabel(priority: string): string {
@@ -279,13 +280,18 @@ function SecretaryDashboard({ token }: SecretaryDashboardProps) {
   }
 
   // Fonction pour charger les tickets (séparée pour pouvoir être appelée périodiquement)
-  async function loadTickets() {
+  async function loadTickets(searchTerm?: string) {
     if (!token || token.trim() === "") {
       return;
     }
     
     try {
-      const ticketsRes = await fetch("http://localhost:8000/tickets/", {
+      const url = new URL("http://localhost:8000/tickets/");
+      if (searchTerm && searchTerm.trim() !== "") {
+        url.searchParams.append("search", searchTerm.trim());
+      }
+      
+      const ticketsRes = await fetch(url.toString(), {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -348,13 +354,22 @@ function SecretaryDashboard({ token }: SecretaryDashboardProps) {
     // Recharger automatiquement les tickets et notifications toutes les 30 secondes
     // Cela permet aux métriques de se mettre à jour automatiquement avec les données réelles
     const interval = setInterval(() => {
-      void loadTickets(); // Rafraîchir les tickets pour mettre à jour les métriques automatiquement
+      void loadTickets(ticketSearchQuery); // Rafraîchir les tickets pour mettre à jour les métriques automatiquement
       void loadNotifications();
       void loadUnreadCount();
     }, 30000);
     
     return () => clearInterval(interval);
-  }, [token]);
+  }, [token, ticketSearchQuery]);
+
+  // Debounce pour la recherche de tickets
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      loadTickets(ticketSearchQuery);
+    }, 500);
+    
+    return () => clearTimeout(timeoutId);
+  }, [ticketSearchQuery, token]);
 
   // Gérer les paramètres URL pour ouvrir automatiquement les modals
   useEffect(() => {
@@ -3028,6 +3043,58 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                 {pendingCount > 99 ? "99+" : pendingCount}
               </span>
             )}
+          </div>
+
+          {/* Barre de recherche */}
+          <div style={{ 
+            display: "flex", 
+            alignItems: "center", 
+            position: "relative",
+            width: "300px"
+          }}>
+            <Search 
+              size={18} 
+              color="#6b7280" 
+              style={{ 
+                position: "absolute", 
+                left: "12px", 
+                pointerEvents: "none",
+                zIndex: 1
+              }} 
+            />
+            <input
+              type="text"
+              placeholder="Rechercher un ticket..."
+              value={ticketSearchQuery}
+              onChange={(e) => {
+                setTicketSearchQuery(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  loadTickets(ticketSearchQuery);
+                }
+              }}
+              style={{
+                width: "100%",
+                padding: "8px 12px 8px 38px",
+                border: "1px solid #e5e7eb",
+                borderRadius: "8px",
+                fontSize: "14px",
+                fontFamily: "system-ui, -apple-system, sans-serif",
+                backgroundColor: "#f9fafb",
+                color: "#111827",
+                outline: "none",
+                transition: "border-color 0.2s",
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = "#3b82f6";
+                e.currentTarget.style.backgroundColor = "#ffffff";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = "#e5e7eb";
+                e.currentTarget.style.backgroundColor = "#f9fafb";
+              }}
+            />
           </div>
 
           {/* Cloche notifications */}
