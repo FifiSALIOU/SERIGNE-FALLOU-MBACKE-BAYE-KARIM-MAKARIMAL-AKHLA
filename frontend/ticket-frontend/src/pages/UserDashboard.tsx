@@ -58,6 +58,15 @@ function UserDashboard({ token: tokenProp }: UserDashboardProps) {
     return `TKT-${number.toString().padStart(3, '0')}`;
   };
 
+  // Fonction helper pour formater le message de notification en remplaçant "#X" par "TK-XXX"
+  const formatNotificationMessage = (message: string): string => {
+    // Remplacer les patterns "#X" ou "ticket #X" par "TK-XXX"
+    return message.replace(/#(\d+)/g, (match, number) => {
+      const ticketNumber = parseInt(number, 10);
+      return `TK-${ticketNumber.toString().padStart(3, '0')}`;
+    });
+  };
+
   // Fonction helper pour formater la date relative
   const formatRelativeTime = (dateString: string): string => {
     const now = new Date();
@@ -1393,7 +1402,7 @@ function UserDashboard({ token: tokenProp }: UserDashboardProps) {
           </div>
 
           {/* Right side - Icons */}
-          <div style={{ display: "flex", alignItems: "center", gap: "0" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
             {/* Welcome message */}
             {userInfo && (
               <span style={{ 
@@ -1406,6 +1415,41 @@ function UserDashboard({ token: tokenProp }: UserDashboardProps) {
                 Bienvenue Dans Votre Espace Utilisateur, {userInfo.full_name.toUpperCase()}
               </span>
             )}
+            
+            {/* Barre de recherche */}
+            <div style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              position: "relative",
+              width: "300px"
+            }}>
+              <Search 
+                size={18} 
+                color="#6b7280" 
+                style={{ 
+                  position: "absolute", 
+                  left: "12px", 
+                  pointerEvents: "none",
+                  zIndex: 1
+                }} 
+              />
+              <input
+                type="text"
+                placeholder="Rechercher par ID, titre, description..."
+                value={dashboardSearch}
+                onChange={(e) => setDashboardSearch(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "8px 40px",
+                  border: "1px solid #e5e7eb",
+                  borderRadius: "8px",
+                  fontSize: "14px",
+                  background: "white",
+                  outline: "none",
+                  color: "#1f2937"
+                }}
+              />
+            </div>
             
             {/* Bell Icon with Notification - DSI style */}
             <div 
@@ -2358,13 +2402,13 @@ function UserDashboard({ token: tokenProp }: UserDashboardProps) {
         {(activeSection === "tickets" || activeSection === "dashboard") && (
           <div ref={ticketsListRef}>
             {activeSection === "dashboard" && (
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-                <h3 style={{ fontSize: "22px", fontWeight: "700", color: "#333" }}>
-                  Mes Tickets Récents
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "32px", marginBottom: "20px" }}>
+                <h3 style={{ fontSize: "22px", fontWeight: "700", color: "#111827" }}>
+                  Tickets Récents
                 </h3>
               </div>
             )}
-            {(activeSection === "dashboard" || activeSection === "tickets") && (
+            {activeSection === "tickets" && (
               <div style={{ 
                 display: "flex", 
                 flexDirection: "column",
@@ -2468,7 +2512,7 @@ function UserDashboard({ token: tokenProp }: UserDashboardProps) {
               </div>
             )}
             {/* Compteur de tickets avec icône */}
-            {(activeSection === "dashboard" || activeSection === "tickets") && (() => {
+            {activeSection === "tickets" && (() => {
               const filteredTickets = tickets.filter((t) => {
                 const search = dashboardSearch.trim().toLowerCase();
                 const formattedNumber = formatTicketNumber(t.number).toLowerCase();
@@ -4029,7 +4073,7 @@ function UserDashboard({ token: tokenProp }: UserDashboardProps) {
                             color: "#333",
                             lineHeight: "1.5"
                           }}>
-                            {notif.message}
+                            {formatNotificationMessage(notif.message)}
                           </p>
                           <p style={{
                             margin: "4px 0 0 0",

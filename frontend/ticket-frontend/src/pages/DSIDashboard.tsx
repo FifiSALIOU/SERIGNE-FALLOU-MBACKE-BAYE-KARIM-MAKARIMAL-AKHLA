@@ -1493,28 +1493,11 @@ function DSIDashboard({ token }: DSIDashboardProps) {
               return Math.round(score);
             };
             
-            // Fonction helper pour formater le temps en heures et minutes (ou jours/heures si >= 24h)
+            // Fonction helper pour formater le temps en heures et minutes
             const formatTimeInHoursMinutes = (hoursDecimal: number): string => {
               if (hoursDecimal === 0) return "0 mn";
               
-              // Si >= 24 heures, afficher en jours et heures
-              if (hoursDecimal >= 24) {
-                const days = Math.floor(hoursDecimal / 24);
-                const remainingHours = Math.floor(hoursDecimal % 24);
-                const minutes = Math.floor((hoursDecimal % 1) * 60);
-                
-                if (remainingHours === 0 && minutes === 0) {
-                  return `${days} jour${days > 1 ? 's' : ''}`;
-                } else if (remainingHours === 0) {
-                  return `${days} jour${days > 1 ? 's' : ''} ${minutes} mn`;
-                } else if (minutes === 0) {
-                  return `${days} jour${days > 1 ? 's' : ''} ${remainingHours} h`;
-                } else {
-                  return `${days} jour${days > 1 ? 's' : ''} ${remainingHours} h ${minutes} mn`;
-                }
-              }
-              
-              // Sinon, afficher en heures et minutes
+              // Afficher en heures et minutes
               const hours = Math.floor(hoursDecimal);
               const minutes = Math.floor((hoursDecimal - hours) * 60);
               if (hours === 0) {
@@ -1788,28 +1771,11 @@ function DSIDashboard({ token }: DSIDashboardProps) {
     
     async function recalculateMetrics() {
       try {
-        // Fonction helper pour formater le temps en heures et minutes (ou jours/heures si >= 24h)
+        // Fonction helper pour formater le temps en heures et minutes
         const formatTimeInHoursMinutes = (hoursDecimal: number): string => {
           if (hoursDecimal === 0) return "0 mn";
           
-          // Si >= 24 heures, afficher en jours et heures
-          if (hoursDecimal >= 24) {
-            const days = Math.floor(hoursDecimal / 24);
-            const remainingHours = Math.floor(hoursDecimal % 24);
-            const minutes = Math.floor((hoursDecimal % 1) * 60);
-            
-            if (remainingHours === 0 && minutes === 0) {
-              return `${days} jour${days > 1 ? 's' : ''}`;
-            } else if (remainingHours === 0) {
-              return `${days} jour${days > 1 ? 's' : ''} ${minutes} mn`;
-            } else if (minutes === 0) {
-              return `${days} jour${days > 1 ? 's' : ''} ${remainingHours} h`;
-            } else {
-              return `${days} jour${days > 1 ? 's' : ''} ${remainingHours} h ${minutes} mn`;
-            }
-          }
-          
-          // Sinon, afficher en heures et minutes
+          // Afficher en heures et minutes
           const hours = Math.floor(hoursDecimal);
           const minutes = Math.floor((hoursDecimal - hours) * 60);
           if (hours === 0) {
@@ -5952,96 +5918,6 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
           <h3 style={{ marginTop: "8px", marginBottom: "12px", fontSize: "22px", fontWeight: "600", color: "#333" }}>
             Tickets Récents
           </h3>
-          <div style={{ 
-            display: "flex", 
-            gap: "16px", 
-            marginTop: "0",
-            marginBottom: "16px", 
-            flexWrap: "wrap",
-            background: "white",
-            padding: "16px",
-            borderRadius: "8px",
-            boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
-          }}>
-            <div style={{ flex: 1, minWidth: "200px" }}>
-              <label style={{ display: "block", marginBottom: "8px", fontSize: "14px", fontWeight: "500", color: "#666" }}>Filtrer par statut</label>
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                style={{ 
-                  width: "100%", 
-                  padding: "8px 12px", 
-                  border: "1px solid #ddd", 
-                  borderRadius: "4px",
-                  fontSize: "14px"
-                }}
-              >
-                <option value="all">Tous les statuts</option>
-                <option value="en_attente_analyse">En attente d'assignation</option>
-                <option value="en_traitement">En traitement</option>
-                <option value="resolu">Résolus</option>
-                <option value="cloture">Clôturés</option>
-                <option value="rejete">Rejetés</option>
-              </select>
-            </div>
-            <div style={{ flex: 1, minWidth: "200px" }}>
-              <label style={{ display: "block", marginBottom: "8px", fontSize: "14px", fontWeight: "500", color: "#666" }}>Filtrer par agence</label>
-              <select
-                value={agencyFilter}
-                onChange={(e) => setAgencyFilter(e.target.value)}
-                style={{ 
-                  width: "100%", 
-                  padding: "8px 12px", 
-                  border: "1px solid #ddd", 
-                  borderRadius: "4px",
-                  fontSize: "14px"
-                }}
-              >
-                <option value="all">Toutes les agences</option>
-                {allAgencies.map((agency) => (
-                  <option key={agency} value={agency || ""}>{agency}</option>
-                ))}
-              </select>
-            </div>
-            <div style={{ flex: 1, minWidth: "200px" }}>
-              <label style={{ display: "block", marginBottom: "8px", fontSize: "14px", fontWeight: "500", color: "#666" }}>Filtrer par priorité</label>
-              <select
-                value={priorityFilter}
-                onChange={(e) => setPriorityFilter(e.target.value)}
-                style={{ 
-                  width: "100%", 
-                  padding: "8px 12px", 
-                  border: "1px solid #ddd", 
-                  borderRadius: "4px",
-                  fontSize: "14px"
-                }}
-              >
-                <option value="all">Toutes les priorités</option>
-                <option value="critique">Critique</option>
-                <option value="haute">Haute</option>
-                <option value="moyenne">Moyenne</option>
-                <option value="faible">Faible</option>
-              </select>
-            </div>
-            <div style={{ flex: 1, minWidth: "200px" }}>
-              <label style={{ display: "block", marginBottom: "8px", fontSize: "14px", fontWeight: "500", color: "#666" }}>Filtrer par délégation</label>
-              <select
-                value={delegationFilter}
-                onChange={(e) => setDelegationFilter(e.target.value)}
-                style={{ 
-                  width: "100%", 
-                  padding: "8px 12px", 
-                  border: "1px solid #ddd", 
-                  borderRadius: "4px",
-                  fontSize: "14px"
-                }}
-              >
-                <option value="all">Tous les tickets</option>
-                <option value="delegated">Tickets délégués</option>
-                <option value="not_delegated">Tickets non délégués</option>
-              </select>
-            </div>
-          </div>
           {/* Tickets Cards */}
           <div
             style={{
