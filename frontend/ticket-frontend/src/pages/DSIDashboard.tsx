@@ -163,6 +163,13 @@ function DSIDashboard({ token }: DSIDashboardProps) {
     return `TK-${number.toString().padStart(3, '0')}`;
   };
   
+  // Fonction pour formater le message de notification en remplaçant #X par TK-XXX
+  const formatNotificationMessage = (message: string): string => {
+    return message.replace(/#(\d+)/g, (match, number) => {
+      return formatTicketNumber(parseInt(number, 10));
+    });
+  };
+  
   // Déterminer le statut simple Actif / Inactif à partir de actif (Boolean)
   function getAvailabilityStatus(tech: Technician): string {
     // actif est maintenant un Boolean
@@ -14237,7 +14244,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                           color: "#333",
                           lineHeight: "1.5"
                         }}>
-                          {notif.message}
+                          {formatNotificationMessage(notif.message)}
                         </p>
                         <p style={{
                           margin: "4px 0 0 0",
