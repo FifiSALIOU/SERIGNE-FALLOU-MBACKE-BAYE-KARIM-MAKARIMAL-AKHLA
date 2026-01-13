@@ -448,7 +448,7 @@ function DSIDashboard({ token }: DSIDashboardProps) {
       { event: "Ticket Assigné", active: true, recipients: "Technicien" },
       { event: "Ticket Réassigné", active: true, recipients: "Ancien + Nouveau Tech" },
       { event: "Ticket Résolu", active: true, recipients: "Utilisateur" },
-      { event: "Ticket Rejeté", active: true, recipients: "Technicien" },
+      { event: "Ticket Relancé", active: true, recipients: "Technicien" },
       { event: "Ticket Clôturé", active: true, recipients: "Utilisateur" },
       { event: "Commentaire Ajouté", active: true, recipients: "Tous les Participants" },
       { event: "Ticket Escaladé", active: true, recipients: "DSI" },
@@ -2397,13 +2397,13 @@ function DSIDashboard({ token }: DSIDashboardProps) {
         // Trouver l'entrée d'historique correspondant au rejet
         const rejectionEntry = history.find((h: any) => 
           h.new_status === "rejete" && h.reason && (
-            h.reason.includes("Validation utilisateur: Rejeté") || 
-            h.reason.includes("Rejeté")
+            h.reason.includes("Validation utilisateur: Relancé") || 
+            h.reason.includes("Relancé")
           )
         );
         console.log("Entrée de rejet trouvée:", rejectionEntry); // Debug
         if (rejectionEntry && rejectionEntry.reason) {
-          // Extraire le motif du format "Validation utilisateur: Rejeté. Motif: [motif]"
+          // Extraire le motif du format "Validation utilisateur: Relancé. Motif: [motif]"
           const match = rejectionEntry.reason.match(/Motif:\s*(.+)/);
           const extractedReason = match ? match[1].trim() : rejectionEntry.reason;
           console.log("Motif extrait:", extractedReason); // Debug
@@ -3296,7 +3296,7 @@ function DSIDashboard({ token }: DSIDashboardProps) {
           ["Assignés/En cours", assignedCount.toString(), allTickets.length > 0 ? ((assignedCount / allTickets.length) * 100).toFixed(1) + "%" : "0%"],
           ["Résolus", resolvedCount.toString(), allTickets.length > 0 ? ((resolvedCount / allTickets.length) * 100).toFixed(1) + "%" : "0%"],
           ["Clôturés", closedCount.toString(), allTickets.length > 0 ? ((closedCount / allTickets.length) * 100).toFixed(1) + "%" : "0%"],
-          ["Rejetés", rejectedTickets.length.toString(), allTickets.length > 0 ? ((rejectedTickets.length / allTickets.length) * 100).toFixed(1) + "%" : "0%"]
+          ["Relancés", rejectedTickets.length.toString(), allTickets.length > 0 ? ((rejectedTickets.length / allTickets.length) * 100).toFixed(1) + "%" : "0%"]
         ];
         
         autoTable(doc, {
@@ -4015,7 +4015,7 @@ function DSIDashboard({ token }: DSIDashboardProps) {
           ['Assignés/En cours', assignedCount, allTickets.length > 0 ? ((assignedCount / allTickets.length) * 100).toFixed(1) + '%' : '0%'],
           ['Résolus', resolvedCount, allTickets.length > 0 ? ((resolvedCount / allTickets.length) * 100).toFixed(1) + '%' : '0%'],
           ['Clôturés', closedCount, allTickets.length > 0 ? ((closedCount / allTickets.length) * 100).toFixed(1) + '%' : '0%'],
-          ['Rejetés', rejectedTickets.length, allTickets.length > 0 ? ((rejectedTickets.length / allTickets.length) * 100).toFixed(1) + '%' : '0%']
+          ['Relancés', rejectedTickets.length, allTickets.length > 0 ? ((rejectedTickets.length / allTickets.length) * 100).toFixed(1) + '%' : '0%']
         ];
         const statusWs = XLSX.utils.aoa_to_sheet(statusData);
         XLSX.utils.book_append_sheet(wb, statusWs, sanitizeSheetName("Par statut"));
@@ -6231,7 +6231,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                            t.status === "assigne_technicien" ? "Assigné" :
                            t.status === "en_cours" ? "En cours" :
                            t.status === "resolu" ? "Résolu" :
-                           t.status === "rejete" ? "Rejeté" :
+                           t.status === "rejete" ? "Relancé" :
                            t.status === "cloture" ? "Clôturé" : t.status}
                         </span>
 
@@ -6563,7 +6563,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                 { name: "Assignés / En cours", value: allTickets.filter((t) => t.status === "assigne_technicien" || t.status === "en_cours").length, color: "#3b82f6" },
                 { name: "Résolus", value: allTickets.filter((t) => t.status === "resolu").length, color: "#22c55e" },
                 { name: "Clôturés", value: allTickets.filter((t) => t.status === "cloture").length, color: "#facc15" },
-                { name: "Rejetés", value: allTickets.filter((t) => t.status === "rejete").length, color: "#ef4444" }
+                { name: "Relancés", value: allTickets.filter((t) => t.status === "rejete").length, color: "#ef4444" }
               ].filter(item => item.value > 0);
 
               return statusData.length > 0 ? (
@@ -7141,7 +7141,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                     <option value="en_traitement">En traitement</option>
                     <option value="resolu">Résolus</option>
                     <option value="cloture">Clôturés</option>
-                    <option value="rejete">Rejetés</option>
+                    <option value="rejete">Relancés</option>
                   </select>
                 </div>
                 <div style={{ flex: 1, minWidth: "200px" }}>
@@ -7352,7 +7352,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                                t.status === "assigne_technicien" ? "Assigné" :
                                t.status === "en_cours" ? "En cours" :
                                t.status === "resolu" ? "Résolu" :
-                               t.status === "rejete" ? "Rejeté" :
+                               t.status === "rejete" ? "Relancé" :
                                t.status === "cloture" ? "Clôturé" : t.status}
                             </span>
 
@@ -13834,7 +13834,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                               color: "#991b1b",
                               border: "1px solid #fecaca"
                             }}>
-                              Rejeté
+                              Relancé
                             </span>
                           )}
                         </div>
@@ -15365,7 +15365,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                           color: "#991b1b",
                           border: "1px solid #fecaca"
                         }}>
-                          Rejeté
+                          Relancé
                         </span>
                       )}
                     </div>
