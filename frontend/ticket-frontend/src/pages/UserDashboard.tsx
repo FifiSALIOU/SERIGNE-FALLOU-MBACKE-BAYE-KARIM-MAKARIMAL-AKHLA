@@ -58,12 +58,12 @@ function UserDashboard({ token: tokenProp }: UserDashboardProps) {
     return `TKT-${number.toString().padStart(3, '0')}`;
   };
 
-  // Fonction helper pour formater le message de notification en remplaçant "#X" par "TK-XXX"
+  // Fonction helper pour formater le message de notification en remplaçant "#X" par "TKT-XXX"
   const formatNotificationMessage = (message: string): string => {
-    // Remplacer les patterns "#X" ou "ticket #X" par "TK-XXX"
+    // Remplacer les patterns "#X" ou "ticket #X" par "TKT-XXX"
     return message.replace(/#(\d+)/g, (match, number) => {
       const ticketNumber = parseInt(number, 10);
-      return `TK-${ticketNumber.toString().padStart(3, '0')}`;
+      return `TKT-${ticketNumber.toString().padStart(3, '0')}`;
     });
   };
 
@@ -1543,8 +1543,8 @@ function UserDashboard({ token: tokenProp }: UserDashboardProps) {
                 </svg>
                 Retour
               </button>
-              <h2 style={{ fontSize: "24px", fontWeight: "700", color: "#111827", marginBottom: "8px" }}>
-                Détails du ticket #{ticketDetails.number}
+              <h2 style={{ fontSize: "18px", fontWeight: "700", color: "#111827", marginBottom: "8px" }}>
+                Détails du ticket {formatTicketNumber(ticketDetails.number)}
               </h2>
             </div>
 
