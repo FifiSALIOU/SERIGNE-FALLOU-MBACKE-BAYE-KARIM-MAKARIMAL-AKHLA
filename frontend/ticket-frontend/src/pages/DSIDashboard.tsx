@@ -2753,7 +2753,7 @@ function DSIDashboard({ token }: DSIDashboardProps) {
     
     // Tickets relancés (excluant les délégués par le DSI connecté)
     const relance = allTickets.filter(t => 
-      (t.status === "relance" || t.status === "relancé") && 
+      t.status === "rejete" && 
       !delegatedTicketsByMe.has(t.id)
     ).length;
     
