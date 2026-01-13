@@ -8077,14 +8077,16 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                           <div 
                             key={tech.technicien}
                             style={{ 
-                              background: "white", 
-                              borderRadius: "8px", 
-                              border: "1px solid rgba(229, 231, 235, 0.5)", 
-                              padding: "16px", 
-                              boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                              background: "#FFFFFF", 
+                              borderRadius: "12px", 
+                              border: "1px solid #F2F2F2", 
+                              padding: "16px 20px", 
+                              boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
                               display: "flex",
                               alignItems: "center",
-                              gap: "12px"
+                              gap: "20px",
+                              minHeight: "56px",
+                              fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
                             }}
                           >
                             {/* Badge de rang */}
@@ -8094,44 +8096,42 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                                 height: "32px",
                                 borderRadius: "50%",
                                 backgroundColor: index === 0 
-                                  ? "#FF9500" // Rang 1 : orange
-                                  : "#E5E7EB", // Autres rangs : gris clair
+                                  ? "#E8D9B0" // Rang 1 : Jaune doré/beige
+                                  : "#E5E5E5", // Autres rangs : Gris clair
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
                                 fontSize: "14px",
-                                fontWeight: 600,
+                                fontWeight: 500,
                                 color: index === 0 
-                                  ? "#FFFFFF" // Rang 1 : blanc
-                                  : "#6B7280", // Autres rangs : gris moyen
+                                  ? "#262626" // Rang 1 : texte foncé
+                                  : "#262626", // Autres rangs : texte foncé
                                 flexShrink: 0
                               }}
                             >
                               {index + 1}
                             </div>
 
-                            {/* Informations du technicien */}
+                            {/* Nom du technicien */}
                             <div style={{ flex: 1, minWidth: 0 }}>
-                              <div style={{ fontSize: "16px", fontWeight: 500, color: "#111827", marginBottom: "4px" }}>
+                              <div style={{ fontSize: "14px", fontWeight: 600, color: "#262626" }}>
                                 {tech.technicien}
                               </div>
                             </div>
 
-                            {/* Badge temps moyen */}
+                            {/* Temps moyen avec icône */}
                             <div 
                               style={{
                                 display: "flex",
                                 alignItems: "center",
                                 gap: "4px",
-                                backgroundColor: "#E5E7EB",
-                                padding: "4px 8px",
-                                borderRadius: "6px",
                                 fontSize: "14px",
-                                color: "#4B5563",
+                                fontWeight: 400,
+                                color: "#808080",
                                 flexShrink: 0
                               }}
                             >
-                              <Clock className="h-3 w-3" style={{ width: "12px", height: "12px", color: "#4B5563" }} />
+                              <Clock className="h-3 w-3" style={{ width: "12px", height: "12px", color: "#808080" }} />
                               <span>{tech.avgTimeHours > 0 ? `${tech.avgTimeHours.toFixed(1)}h moy.` : "N/A"}</span>
                             </div>
 
@@ -8140,17 +8140,20 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                               style={{
                                 display: "flex",
                                 alignItems: "center",
-                                gap: "8px",
-                                backgroundColor: "#D1FAE5",
-                                color: "#047857",
+                                gap: "6px",
+                                backgroundColor: "#D4F5E0",
+                                color: "#1B8A3E",
                                 padding: "6px 12px",
-                                borderRadius: "8px",
-                                fontSize: "14px",
-                                fontWeight: 600,
+                                borderRadius: "14px",
+                                fontSize: "13px",
+                                fontWeight: 500,
+                                minWidth: "60px",
+                                height: "28px",
+                                justifyContent: "center",
                                 flexShrink: 0
                               }}
                             >
-                              <TrendingUp className="h-4 w-4" style={{ width: "16px", height: "16px", color: "#047857" }} />
+                              <TrendingUp className="h-4 w-4" style={{ width: "16px", height: "16px", color: "#1B8A3E" }} />
                               <span>{tech.performancePercent}%</span>
                             </div>
                           </div>
