@@ -5656,6 +5656,38 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                       Réassigner
                     </button>
                   )}
+
+                  {/* Bouton Rouvrir (si relancé) */}
+                  {ticketDetails.status === "rejete" && (
+                    <button
+                      onClick={() => {
+                        handleReopenClick(ticketDetails.id);
+                      }}
+                      disabled={loading}
+                      style={{
+                        padding: "10px 20px",
+                        backgroundColor: loading ? "#d1d5db" : "#f3f4f6",
+                        color: "black",
+                        border: "none",
+                        borderRadius: "6px",
+                        cursor: loading ? "not-allowed" : "pointer",
+                        fontSize: "14px",
+                        fontWeight: "500",
+                        opacity: loading ? 0.6 : 1,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px"
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!loading) e.currentTarget.style.backgroundColor = "#e5e7eb";
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!loading) e.currentTarget.style.backgroundColor = "#f3f4f6";
+                      }}
+                    >
+                      Rouvrir
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
