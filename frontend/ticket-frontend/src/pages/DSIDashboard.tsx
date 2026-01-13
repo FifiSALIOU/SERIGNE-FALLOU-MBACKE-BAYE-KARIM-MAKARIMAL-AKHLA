@@ -8056,7 +8056,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                                   boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
                                 }}
                                 formatter={(value: any, name: any, props: any) => {
-                                  return [`Résolus : ${value}`, props.payload.technicien];
+                                  return [`Résolus : ${value}`, ""];
                                 }}
                               />
                               <Bar 
