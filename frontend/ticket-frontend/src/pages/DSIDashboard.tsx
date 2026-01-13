@@ -2762,7 +2762,7 @@ function DSIDashboard({ token }: DSIDashboardProps) {
     
     return [
       { name: "En cours", value: enCours, percentage: total > 0 ? Math.round((enCours / total) * 100) : 0 },
-      { name: "Ouvert", value: ouvert, percentage: total > 0 ? Math.round((ouvert / total) * 100) : 0 },
+      { name: "En attente d'assignation", value: ouvert, percentage: total > 0 ? Math.round((ouvert / total) * 100) : 0 },
       { name: "Relancé", value: relance, percentage: total > 0 ? Math.round((relance / total) * 100) : 0 },
       { name: "Résolu", value: resolu, percentage: total > 0 ? Math.round((resolu / total) * 100) : 0 },
       { name: "Délégué", value: delegue, percentage: total > 0 ? Math.round((delegue / total) * 100) : 0 }
@@ -7814,7 +7814,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                           {prepareStatusData().map((entry, index) => {
                             const colors = {
                               "En cours": "#FF9500",
-                              "Ouvert": "#3B82F6",
+                              "En attente d'assignation": "#3B82F6",
                               "Relancé": "#EF4444",
                               "Résolu": "#22C55E",
                               "Délégué": "#8B5CF6"
