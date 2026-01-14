@@ -6687,10 +6687,6 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
           {currentActiveSection === "technicians" && (
             <div style={{ padding: "24px" }}>
               <div style={{
-                background: "hsl(0, 0%, 100%)",
-                borderRadius: "8px",
-                border: "1px solid hsla(220, 20%, 92%, 0.5)",
-                padding: "16px",
                 display: "flex",
                 flexDirection: "column"
               }}>
@@ -6735,6 +6731,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                         <div
                           key={tech.id}
                           style={{
+                            background: "white",
                             border: "1px solid hsla(220, 20%, 92%, 0.5)",
                             borderRadius: "8px",
                             padding: "10px",
