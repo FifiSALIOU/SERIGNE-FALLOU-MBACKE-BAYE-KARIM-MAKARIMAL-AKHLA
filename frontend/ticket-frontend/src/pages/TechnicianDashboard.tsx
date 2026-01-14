@@ -1378,7 +1378,7 @@ function TechnicianDashboard({ token }: TechnicianDashboardProps) {
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between",
+                        justifyContent: "flex-end",
                         alignItems: "flex-start",
                         width: "100%",
                         marginBottom: "8px",
@@ -1446,7 +1446,7 @@ function TechnicianDashboard({ token }: TechnicianDashboardProps) {
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between",
+                        justifyContent: "flex-end",
                         alignItems: "flex-start",
                         width: "100%",
                         marginBottom: "8px",
@@ -1514,7 +1514,7 @@ function TechnicianDashboard({ token }: TechnicianDashboardProps) {
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between",
+                        justifyContent: "flex-end",
                         alignItems: "flex-start",
                         width: "100%",
                         marginBottom: "8px",
@@ -1582,7 +1582,7 @@ function TechnicianDashboard({ token }: TechnicianDashboardProps) {
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between",
+                        justifyContent: "flex-end",
                         alignItems: "flex-start",
                         width: "100%",
                         marginBottom: "8px",
