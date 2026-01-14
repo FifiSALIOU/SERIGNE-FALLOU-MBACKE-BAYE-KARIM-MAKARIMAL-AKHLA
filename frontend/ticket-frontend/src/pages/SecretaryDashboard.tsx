@@ -150,6 +150,19 @@ function SecretaryDashboard({ token }: SecretaryDashboardProps) {
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
+  
+  // Fonction helper pour formater le numéro de ticket en "TKT-XXX"
+  const formatTicketNumber = (number: number): string => {
+    return `TKT-${number.toString().padStart(3, '0')}`;
+  };
+  
+  // Fonction pour formater le message de notification en remplaçant #X par TKT-XXX
+  const formatNotificationMessage = (message: string): string => {
+    return message.replace(/#(\d+)/g, (match, number) => {
+      return formatTicketNumber(parseInt(number, 10));
+    });
+  };
+  
   const [allTickets, setAllTickets] = useState<Ticket[]>([]);
   const [technicians, setTechnicians] = useState<Technician[]>([]);
   const [selectedTicket, setSelectedTicket] = useState<string | null>(null);
@@ -232,11 +245,6 @@ function SecretaryDashboard({ token }: SecretaryDashboardProps) {
       default: return priority;
     }
   }
-
-  // Fonction helper pour formater le numéro de ticket en "TKT-XXX"
-  const formatTicketNumber = (number: number): string => {
-    return `TKT-${String(number).padStart(3, "0")}`;
-  };
 
   // Fonction pour charger les rapports récents
   async function loadRecentReports() {
@@ -9241,7 +9249,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                           color: "#333",
                           lineHeight: "1.5"
                         }}>
-                          {notif.message}
+                          {roleName === "Adjoint DSI" ? formatNotificationMessage(notif.message) : notif.message}
                         </p>
                         <p style={{
                           margin: "4px 0 0 0",
