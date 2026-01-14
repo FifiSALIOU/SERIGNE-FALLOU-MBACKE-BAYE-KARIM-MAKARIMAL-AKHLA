@@ -6714,7 +6714,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                 </div>
 
                 {/* Liste des techniciens */}
-                <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "16px" }}>
                   {technicians.length === 0 ? (
                     <div style={{ padding: "20px", textAlign: "center", color: "hsl(220, 15%, 45%)" }}>
                       Aucun technicien trouvé
@@ -6737,7 +6737,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                           style={{
                             border: "1px solid hsla(220, 20%, 92%, 0.5)",
                             borderRadius: "8px",
-                            padding: "12px",
+                            padding: "10px",
                             transition: "all 200ms",
                             cursor: "pointer"
                           }}
@@ -6749,18 +6749,18 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                           }}
                         >
                           {/* En-tête avec avatar et infos */}
-                          <div style={{ display: "flex", gap: "12px", marginBottom: "10px" }}>
+                          <div style={{ display: "flex", gap: "10px", marginBottom: "8px" }}>
                             {/* Avatar */}
                             <div style={{
-                              width: "40px",
-                              height: "40px",
+                              width: "32px",
+                              height: "32px",
                               borderRadius: "50%",
                               background: "hsla(25, 95%, 53%, 0.1)",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
                               color: "hsl(25, 95%, 53%)",
-                              fontSize: "14px",
+                              fontSize: "12px",
                               fontWeight: 600,
                               flexShrink: 0
                             }}>
@@ -6770,17 +6770,17 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                             {/* Infos */}
                             <div style={{ flex: 1, minWidth: 0 }}>
                               <div style={{
-                                fontSize: "14px",
+                                fontSize: "13px",
                                 fontWeight: 600,
                                 color: "#111827",
-                                marginBottom: "3px"
+                                marginBottom: "2px"
                               }}>
                                 {tech.full_name}
                               </div>
                               <div style={{
-                                fontSize: "14px",
+                                fontSize: "12px",
                                 color: "hsl(220, 15%, 45%)",
-                                marginBottom: "10px"
+                                marginBottom: "8px"
                               }}>
                                 {tech.email}
                               </div>
@@ -6789,11 +6789,11 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                               <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                                 {tech.specialization === "materiel" ? (
                                   <>
-                                    <Wrench size={12} color="hsl(220, 15%, 45%)" />
+                                    <Wrench size={10} color="hsl(220, 15%, 45%)" />
                                     <span style={{
-                                      padding: "2px 8px",
+                                      padding: "2px 6px",
                                       borderRadius: "4px",
-                                      fontSize: "12px",
+                                      fontSize: "11px",
                                       border: "1px solid hsla(220, 20%, 92%, 0.5)",
                                       color: "hsl(220, 15%, 45%)"
                                     }}>
@@ -6802,15 +6802,15 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                                   </>
                                 ) : (
                                   <>
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="hsl(220, 15%, 45%)" strokeWidth="2">
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="hsl(220, 15%, 45%)" strokeWidth="2">
                                       <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
                                       <line x1="8" y1="21" x2="16" y2="21"></line>
                                       <line x1="12" y1="17" x2="12" y2="21"></line>
                                     </svg>
                                     <span style={{
-                                      padding: "2px 8px",
+                                      padding: "2px 6px",
                                       borderRadius: "4px",
-                                      fontSize: "12px",
+                                      fontSize: "11px",
                                       border: "1px solid hsla(220, 20%, 92%, 0.5)",
                                       color: "hsl(220, 15%, 45%)"
                                     }}>
@@ -6826,15 +6826,15 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                           <div style={{
                             display: "grid",
                             gridTemplateColumns: "repeat(4, 1fr)",
-                            gap: "6px",
-                            marginTop: "10px"
+                            gap: "4px",
+                            marginTop: "8px"
                           }}>
                             {/* En cours */}
-                            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                              <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                                <Clock size={12} color="hsl(199, 89%, 48%)" />
+                            <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: "3px" }}>
+                                <Clock size={10} color="hsl(199, 89%, 48%)" />
                                 <span style={{
-                                  fontSize: "14px",
+                                  fontSize: "12px",
                                   fontWeight: 600,
                                   color: "hsl(199, 89%, 48%)"
                                 }}>
@@ -6842,7 +6842,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                                 </span>
                               </div>
                               <span style={{
-                                fontSize: "12px",
+                                fontSize: "10px",
                                 color: "hsl(220, 15%, 45%)"
                               }}>
                                 En cours
@@ -6850,11 +6850,11 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                             </div>
 
                             {/* Assignés */}
-                            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                              <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                                <Wrench size={12} color="hsl(25, 95%, 53%)" />
+                            <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: "3px" }}>
+                                <Wrench size={10} color="hsl(25, 95%, 53%)" />
                                 <span style={{
-                                  fontSize: "14px",
+                                  fontSize: "12px",
                                   fontWeight: 600,
                                   color: "hsl(25, 95%, 53%)"
                                 }}>
@@ -6862,7 +6862,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                                 </span>
                               </div>
                               <span style={{
-                                fontSize: "12px",
+                                fontSize: "10px",
                                 color: "hsl(220, 15%, 45%)"
                               }}>
                                 Assignés
@@ -6870,11 +6870,11 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                             </div>
 
                             {/* Résolus */}
-                            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                              <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                                <CheckCircle2 size={12} color="hsl(142, 76%, 36%)" />
+                            <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: "3px" }}>
+                                <CheckCircle2 size={10} color="hsl(142, 76%, 36%)" />
                                 <span style={{
-                                  fontSize: "14px",
+                                  fontSize: "12px",
                                   fontWeight: 600,
                                   color: "hsl(142, 76%, 36%)"
                                 }}>
@@ -6882,7 +6882,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                                 </span>
                               </div>
                               <span style={{
-                                fontSize: "12px",
+                                fontSize: "10px",
                                 color: "hsl(220, 15%, 45%)"
                               }}>
                                 Résolus
@@ -6890,11 +6890,11 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                             </div>
 
                             {/* Relancés */}
-                            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                              <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                                <AlertTriangle size={12} color="hsl(0, 84%, 60%)" />
+                            <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: "3px" }}>
+                                <AlertTriangle size={10} color="hsl(0, 84%, 60%)" />
                                 <span style={{
-                                  fontSize: "14px",
+                                  fontSize: "12px",
                                   fontWeight: 600,
                                   color: "hsl(0, 84%, 60%)"
                                 }}>
@@ -6902,7 +6902,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                                 </span>
                               </div>
                               <span style={{
-                                fontSize: "12px",
+                                fontSize: "10px",
                                 color: "hsl(220, 15%, 45%)"
                               }}>
                                 Relancés
