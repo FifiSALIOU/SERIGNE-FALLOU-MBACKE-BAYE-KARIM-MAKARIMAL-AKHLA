@@ -4009,19 +4009,19 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                           disabled={loading}
                           style={{
                             padding: "10px 20px",
-                            backgroundColor: "#3b82f6",
-                            color: "white",
+                            backgroundColor: loading ? "#d1d5db" : "#f3f4f6",
+                            color: "black",
                             border: "none",
                             borderRadius: "6px",
-                            cursor: "pointer",
+                            cursor: loading ? "not-allowed" : "pointer",
                             fontSize: "14px",
                             fontWeight: "500"
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = "#2563eb";
+                            if (!loading) e.currentTarget.style.backgroundColor = "#e5e7eb";
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = "#3b82f6";
+                            if (!loading) e.currentTarget.style.backgroundColor = "#f3f4f6";
                           }}
                         >
                           Assigner à un technicien
