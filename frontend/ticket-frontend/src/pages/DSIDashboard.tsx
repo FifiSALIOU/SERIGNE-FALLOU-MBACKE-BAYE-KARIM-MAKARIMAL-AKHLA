@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useSearchParams, useLocation, useNavigate } from "react-router-dom";
-import { Users, Clock3, TrendingUp, Award, UserCheck, Star, LayoutDashboard, ChevronLeft, ChevronRight, Bell, BarChart3, Search, Ticket, Wrench, CheckCircle2, AlertTriangle, Clock, Briefcase, UserPlus, CornerUpRight } from "lucide-react";
+import { Users, Clock3, TrendingUp, Award, UserCheck, Star, LayoutDashboard, ChevronLeft, ChevronRight, Bell, BarChart3, Search, Ticket, Wrench, CheckCircle2, AlertTriangle, Clock, Briefcase, UserPlus, CornerUpRight, Box } from "lucide-react";
 import React from "react";
 import helpdeskLogo from "../assets/helpdesk-logo.png";
 import jsPDF from "jspdf";
@@ -235,6 +235,7 @@ function DSIDashboard({ token }: DSIDashboardProps) {
     if (location.pathname === "/dashboard/dsi/reports") return "reports";
     if (location.pathname === "/dashboard/dsi/users") return "users";
     if (location.pathname === "/dashboard/dsi/technicians") return "technicians";
+    if (location.pathname === "/dashboard/dsi/actifs") return "actifs";
     if (location.pathname === "/dashboard/dsi/tickets") return "tickets";
     if (location.pathname === "/dashboard/dsi") return "dashboard";
     return "dashboard"; // Par défaut
@@ -4876,6 +4877,29 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
           </div>
           <div style={{ fontSize: "16px", fontFamily: "'Inter', system-ui, sans-serif", fontWeight: "500" }}>Tickets</div>
         </div>
+        {userRole === "Admin" && (
+          <div 
+            onClick={() => {
+              navigate("/dashboard/dsi/actifs");
+            }}
+            style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              gap: "12px", 
+              padding: "10px", 
+              cursor: "pointer",
+              color: "white",
+              borderRadius: "4px",
+              background: activeSection === "actifs" ? "hsl(25, 95%, 53%)" : "transparent",
+              marginBottom: "8px"
+            }}
+          >
+            <div style={{ width: "24px", height: "24px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Box size={18} color={activeSection === "actifs" ? "white" : "rgba(180, 180, 180, 0.7)"} strokeWidth={2} />
+            </div>
+            <div style={{ fontSize: "16px", fontFamily: "'Inter', system-ui, sans-serif", fontWeight: "500" }}>Actifs</div>
+          </div>
+        )}
         {userRole !== "Admin" && (
           <div 
             onClick={() => navigate("/dashboard/dsi/technicians")}
