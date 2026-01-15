@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useSearchParams, useLocation, useNavigate } from "react-router-dom";
-import { PanelLeft, ClipboardList, Clock3, CheckCircle2, LayoutDashboard, ChevronLeft, ChevronRight, Bell, Search, Box, Clock, Monitor, Wrench } from "lucide-react";
+import { ClipboardList, Clock3, CheckCircle2, LayoutDashboard, ChevronLeft, ChevronRight, Bell, Search, Box, Clock, Monitor, Wrench } from "lucide-react";
 import helpdeskLogo from "../assets/helpdesk-logo.png";
 
 interface Notification {
@@ -149,7 +149,7 @@ function TechnicianDashboard({ token }: TechnicianDashboardProps) {
   // Fonction helper pour formater le message de notification en remplaçant "#X" par "TKT-XXX"
   const formatNotificationMessage = (message: string): string => {
     // Remplacer les patterns "#X" ou "ticket #X" par "TKT-XXX"
-    return message.replace(/#(\d+)/g, (match, number) => {
+    return message.replace(/#(\d+)/g, (_, number) => {
       const ticketNumber = parseInt(number, 10);
       return `TKT-${ticketNumber.toString().padStart(3, '0')}`;
     });
@@ -329,42 +329,45 @@ function TechnicianDashboard({ token }: TechnicianDashboardProps) {
   useEffect(() => {
     const ticketId = searchParams.get("ticket");
     
-    if (ticketId && token) {
-      // Charger et ouvrir automatiquement les détails du ticket
-      // Ne pas attendre que le ticket soit dans allTickets car il peut venir d'un email
-      async function openTicket() {
-        try {
-          const res = await fetch(`http://localhost:8000/tickets/${ticketId}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          if (res.ok) {
-            const data = await res.json();
-            setTicketDetails(data);
-            // Charger l'historique
-            try {
-              const historyRes = await fetch(`http://localhost:8000/tickets/${ticketId}/history`, {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              });
-              if (historyRes.ok) {
-                const historyData = await historyRes.json();
-                setTicketHistory(Array.isArray(historyData) ? historyData : []);
-              }
-            } catch {}
-            setViewTicketDetails(ticketId);
-            // Nettoyer l'URL après avoir ouvert le ticket
-            window.history.replaceState({}, "", window.location.pathname);
+    if (ticketId && allTickets.length > 0) {
+      // Vérifier que le ticket existe et est assigné au technicien
+      const ticket = allTickets.find(t => t.id === ticketId);
+      if (ticket) {
+        // Charger et ouvrir automatiquement les détails du ticket
+        async function openTicket() {
+          try {
+            const res = await fetch(`http://localhost:8000/tickets/${ticketId}`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+            if (res.ok) {
+              const data = await res.json();
+              setTicketDetails(data);
+              // Charger l'historique
+              try {
+                const historyRes = await fetch(`http://localhost:8000/tickets/${ticketId}/history`, {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                });
+                if (historyRes.ok) {
+                  const historyData = await historyRes.json();
+                  setTicketHistory(Array.isArray(historyData) ? historyData : []);
+                }
+              } catch {}
+              setViewTicketDetails(ticketId);
+              // Nettoyer l'URL après avoir ouvert le ticket
+              window.history.replaceState({}, "", window.location.pathname);
+            }
+          } catch (err) {
+            console.error("Erreur chargement détails:", err);
           }
-        } catch (err) {
-          console.error("Erreur chargement détails:", err);
         }
+        void openTicket();
       }
-      void openTicket();
     }
-  }, [searchParams, token]);
+  }, [searchParams, allTickets, token]);
 
   async function loadTicketDetails(ticketId: string) {
     try {
