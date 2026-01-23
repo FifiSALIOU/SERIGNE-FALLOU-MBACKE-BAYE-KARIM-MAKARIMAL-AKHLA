@@ -5585,7 +5585,7 @@ Les données détaillées seront disponibles dans une prochaine version.</pre>
                         if (!loading) e.currentTarget.style.backgroundColor = "#f3f4f6";
                       }}
                     >
-                      <UserPlus size={16} />
+                      <UserCheck size={16} />
                       Assigner
                     </button>
                   )}
